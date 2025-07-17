@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simple Calculator</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f2f2f2;
+    }
+    .calculator {
+      background: #fff;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+      width: 280px;
+    }
+    #display {
+      width: 100%;
+      height: 50px;
+      font-size: 1.5rem;
+      padding: 0 10px;
+      margin-bottom: 10px;
+      text-align: right;
+      border: none;
+      background-color: #ffeb3b;
+      border-radius: 8px;
+      color: #333;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    .button {
+      background-color: #03a9f4;
+      border: none;
+      font-size: 1.2rem;
+      padding: 15px;
+      cursor: pointer;
+      border-radius: 8px;
+      color: white;
+      transition: background-color 0.2s, transform 0.1s;
+    }
+    .button:hover { background-color: #0288d1; transform: scale(1.05); }
+    .button:active { transform: scale(0.95); }
+    .clear { background-color: #ff5722; }
+    .clear:hover { background-color: #e64a19; }
+    .equal { background-color: #8bc34a; }
+    .equal:hover { background-color: #689f38; }
+    .operator { background-color: #ff9800; }
+    .operator:hover { background-color: #f57c00; }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <input type="text" id="display" disabled value="" />
+    <div class="buttons">
+      <button class="button clear" onclick="clearDisplay()">C</button>
+      <button class="button operator" onclick="appendOperation('/')">/</button>
+      <button class="button operator" onclick="appendOperation('*')">*</button>
+      <button class="button operator" onclick="appendOperation('-')">-</button>
+
+      <button class="button" onclick="appendNumber('7')">7</button>
+      <button class="button" onclick="appendNumber('8')">8</button>
+      <button class="button" onclick="appendNumber('9')">9</button>
+      <button class="button operator" onclick="appendOperation('+')">+</button>
+
+      <button class="button" onclick="appendNumber('4')">4</button>
+      <button class="button" onclick="appendNumber('5')">5</button>
+      <button class="button" onclick="appendNumber('6')">6</button>
+      <button class="button equal" onclick="calculate()">=</button>
+
+      <button class="button" onclick="appendNumber('1')">1</button>
+      <button class="button" onclick="appendNumber('2')">2</button>
+      <button class="button" onclick="appendNumber('3')">3</button>
+      <button class="button" onclick="appendNumber('0')">0</button>
+    </div>
+  </div>
+
+  <script>
+    let currentInput = '';
+    let previousInput = '';
+    let currentOperation = '';
+
+    function appendNumber(num) {
+      currentInput += num;
+      updateDisplay();
+    }
+
+    function appendOperation(op) {
+      if (!currentInput) return;
+      if (previousInput) calculate();
+      currentOperation = op;
+      previousInput = currentInput;
+      currentInput = '';
+      updateDisplay();
+    }
+
+    function calculate() {
+      if (!previousInput || !currentInput) return;
+      const a = parseFloat(previousInput);
+      const b = parseFloat(currentInput);
+      let result;
+      switch (currentOperation) {
+        case '+': result = a + b; break;
+        case '-': result = a - b; break;
+        case '*': result = a * b; break;
+        case '/':
+          if (b === 0) { alert("Cannot divide by zero"); return; }
+          result = a / b; break;
+        default: return;
+      }
+      currentInput = result.toString();
+      previousInput = currentOperation = '';
+      updateDisplay();
+    }
+
+    function clearDisplay() {
+      currentInput = previousInput = currentOperation = '';
+      updateDisplay();
+    }
+
+    function updateDisplay() {
+      const disp = document.getElementById('display');
+      disp.value = previousInput + ' ' + currentOperation + ' ' + currentInput;
+    }
+  </script>
+</body>
+</html>
